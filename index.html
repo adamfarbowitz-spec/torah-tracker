@@ -11,203 +11,199 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <title>Torah Tracker</title>
 <style>
-:root {
-  --green: #1D9E75;
-  --green-light: #E1F5EE;
-  --green-mid: #5DCAA5;
-  --green-dark: #085041;
-  --green-deep: #0F6E56;
-  --amber: #BA7517;
-  --amber-light: #FAEEDA;
-  --gold: #EF9F27;
-  --bg: #f8f8f6;
-  --card: #ffffff;
-  --text: #1a1a18;
-  --text2: #666660;
-  --text3: #999990;
-  --border: rgba(0,0,0,0.1);
-  --border2: rgba(0,0,0,0.06);
-  --radius: 16px;
-  --radius-sm: 10px;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bot: env(safe-area-inset-bottom, 0px);
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #111110;
-    --card: #1e1e1c;
-    --text: #f0f0ec;
-    --text2: #999990;
-    --text3: #666660;
-    --border: rgba(255,255,255,0.1);
-    --border2: rgba(255,255,255,0.06);
-    --green-light: #0d2e22;
-    --amber-light: #2a1e08;
-  }
-}
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; background: var(--bg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text); overflow: hidden; }
-
-#app { display: flex; flex-direction: column; height: 100%; max-width: 430px; margin: 0 auto; }
-.topbar { padding: calc(var(--safe-top) + 14px) 20px 12px; background: var(--card); border-bottom: 0.5px solid var(--border2); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-.topbar h1 { font-size: 20px; font-weight: 600; color: var(--text); }
-.topbar .date-lbl { font-size: 12px; color: var(--text2); margin-top: 1px; }
-.catch-up-btn { background: var(--bg); border: 0.5px solid var(--border); border-radius: 20px; padding: 6px 12px; font-size: 12px; font-weight: 500; color: var(--text2); cursor: pointer; }
-.tabbar { display: flex; background: var(--card); border-top: 0.5px solid var(--border2); padding-bottom: var(--safe-bot); flex-shrink: 0; }
-.tab { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 0 8px; cursor: pointer; gap: 3px; border: none; background: none; color: var(--text3); font-size: 10px; font-weight: 500; transition: color 0.15s; }
-.tab.active { color: var(--green); }
-.tab svg { width: 22px; height: 22px; }
-.page { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px; display: none; }
-.page.active { display: block; }
-.streak-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
-.streak-card { background: var(--card); border-radius: var(--radius-sm); padding: 10px 6px; text-align: center; border: 0.5px solid var(--border2); }
-.streak-card .s-num { font-size: 22px; font-weight: 600; color: var(--text); }
-.streak-card .s-lbl { font-size: 10px; color: var(--text2); margin-top: 2px; }
-.streak-card.on-fire .s-num { color: var(--green); }
-.item-card { background: var(--card); border: 0.5px solid var(--border2); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; transition: border-color 0.2s, background 0.2s; }
-.item-card.done { border-color: var(--green-mid); background: var(--green-light); }
-.item-top { display: flex; align-items: center; gap: 12px; }
-.check-btn { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--bg); cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; font-size: 15px; }
-.item-card.done .check-btn { background: var(--green); border-color: var(--green); color: #fff; }
-.item-info { flex: 1; min-width: 0; }
-.item-name { font-size: 15px; font-weight: 600; color: var(--text); }
-.item-card.done .item-name { color: var(--green-dark); }
-.item-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
-.item-card.done .item-sub { color: var(--green-deep); }
-.prog-wrap { margin-top: 10px; height: 3px; background: var(--border2); border-radius: 2px; overflow: hidden; }
-.prog-bar { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.4s; }
-.notes-toggle { background: none; border: none; font-size: 12px; color: var(--text3); cursor: pointer; padding: 8px 0 2px; display: flex; align-items: center; gap: 5px; }
-.item-card.done .notes-toggle { color: var(--green-deep); }
-textarea.note { width: 100%; margin-top: 6px; padding: 8px 10px; font-size: 13px; font-family: inherit; border: 0.5px solid var(--border); border-radius: var(--radius-sm); background: var(--card); color: var(--text); resize: none; line-height: 1.5; }
-.item-card.done textarea.note { border-color: var(--green-mid); }
-textarea.note:focus { outline: none; border-color: var(--green); }
-.hidden { display: none !important; }
-.mussar-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 0.5px solid var(--border2); }
-.item-card.done .mussar-row { border-top-color: var(--green-mid); }
-.adj-btn { width: 30px; height: 30px; border-radius: 50%; border: 0.5px solid var(--border); background: var(--bg); cursor: pointer; font-size: 18px; font-weight: 400; color: var(--text); display: flex; align-items: center; justify-content: center; }
-.time-val { font-size: 14px; font-weight: 600; min-width: 50px; text-align: center; color: var(--text); }
-.time-of { font-size: 12px; color: var(--text2); }
-.save-btn { width: 100%; margin-top: 8px; padding: 14px; border-radius: var(--radius-sm); border: none; background: var(--green); font-size: 16px; font-weight: 600; color: #fff; cursor: pointer; transition: opacity 0.15s; }
-.save-btn:active { opacity: 0.85; }
-.save-btn.saved { background: var(--green-dark); }
-.week-header { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
-.week-day { background: var(--card); border: 0.5px solid var(--border2); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; }
-.week-day-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-.week-day-name { font-size: 14px; font-weight: 600; color: var(--text); }
-.week-day-date { font-size: 12px; color: var(--text2); }
-.week-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
-.chip.done { background: var(--green-light); color: var(--green-dark); }
-.chip.miss { background: var(--bg); color: var(--text3); border: 0.5px solid var(--border2); }
-.week-note { font-size: 12px; color: var(--text2); margin-top: 8px; font-style: italic; border-top: 0.5px solid var(--border2); padding-top: 8px; }
-.heatmap-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
-.heatmap-sub { font-size: 13px; color: var(--text2); margin-bottom: 16px; }
-.heatmap-section { margin-bottom: 20px; }
-.heatmap-label { font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em; }
-.heatmap-grid { display: grid; grid-template-columns: repeat(13, 1fr); gap: 4px; }
-.hm-cell { aspect-ratio: 1; border-radius: 3px; cursor: default; }
-.hm-0 { background: var(--border2); }
-.hm-1 { background: #9FE1CB; }
-.hm-2 { background: var(--green); }
-.hm-legend { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 11px; color: var(--text2); }
-.hm-legend .hm-cell { width: 12px; height: 12px; flex-shrink: 0; }
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: flex-end; justify-content: center; z-index: 100; padding-bottom: var(--safe-bot); }
-.modal-overlay.hidden { display: none; }
-.modal { background: var(--card); border-radius: 20px 20px 0 0; padding: 20px 20px calc(20px + var(--safe-bot)); width: 100%; max-width: 430px; }
-.modal h2 { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
-.modal-sub { font-size: 13px; color: var(--text2); margin-bottom: 16px; }
-.date-picker-row { display: flex; gap: 8px; margin-bottom: 16px; }
-.date-btn { flex: 1; padding: 10px; border-radius: var(--radius-sm); border: 0.5px solid var(--border); background: var(--bg); font-size: 13px; font-weight: 500; color: var(--text); cursor: pointer; text-align: center; transition: all 0.15s; }
-.date-btn.selected { border-color: var(--green); background: var(--green-light); color: var(--green-dark); }
-.modal-items { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
-.modal-item { display: flex; align-items: center; gap: 10px; }
-.modal-item label { font-size: 14px; color: var(--text); flex: 1; }
-.modal-check { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--bg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
-.modal-check.on { background: var(--green); border-color: var(--green); color: #fff; }
-.modal-btns { display: flex; gap: 10px; }
-.modal-cancel { flex: 1; padding: 12px; border-radius: var(--radius-sm); border: 0.5px solid var(--border); background: var(--bg); font-size: 15px; font-weight: 500; color: var(--text); cursor: pointer; }
-.modal-save { flex: 2; padding: 12px; border-radius: var(--radius-sm); border: none; background: var(--green); font-size: 15px; font-weight: 600; color: #fff; cursor: pointer; }
-.siyum-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 24px; }
-.siyum-overlay.hidden { display: none; }
-.siyum-box { background: var(--card); border-radius: 24px; padding: 32px 24px; text-align: center; max-width: 320px; width: 100%; }
-.siyum-emoji { font-size: 52px; margin-bottom: 12px; }
-.siyum-title { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-.siyum-sub { font-size: 14px; color: var(--text2); line-height: 1.5; margin-bottom: 20px; }
-.siyum-close { width: 100%; padding: 14px; border-radius: var(--radius-sm); border: none; background: var(--green); font-size: 16px; font-weight: 600; color: #fff; cursor: pointer; }
-.install-banner { background: var(--amber-light); border: 0.5px solid var(--amber); border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 14px; font-size: 13px; color: var(--amber); display: flex; align-items: center; gap: 8px; }
-.install-banner button { background: none; border: none; font-size: 16px; cursor: pointer; margin-left: auto; color: var(--amber); }
+:root{--g:#1D9E75;--gl:#E1F5EE;--gm:#5DCAA5;--gd:#085041;--gp:#0F6E56;--bg:#f7f7f5;--card:#ffffff;--t:#1a1a18;--t2:#666660;--t3:#aaa;--br:rgba(0,0,0,0.09);--br2:rgba(0,0,0,0.05);--r:16px;--rs:10px;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root{--bg:#111110;--card:#1e1e1c;--t:#f0f0ec;--t2:#999990;--t3:#555;--br:rgba(255,255,255,0.1);--br2:rgba(255,255,255,0.05);--gl:#0d2e22}}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--t);overflow:hidden}
+#app{display:flex;flex-direction:column;height:100%;max-width:430px;margin:0 auto}
+.topbar{padding:calc(var(--st) + 12px) 16px 10px;background:var(--card);border-bottom:0.5px solid var(--br2);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.logo-wrap{display:flex;align-items:center;gap:10px}
+.logo-svg{width:38px;height:38px;flex-shrink:0}
+.logo-title{font-size:18px;font-weight:700;color:var(--t);letter-spacing:-0.3px}
+.logo-sub{font-size:10px;color:var(--t2);margin-top:1px;direction:rtl;font-family:serif}
+.catch-up-btn{background:var(--bg);border:0.5px solid var(--br);border-radius:20px;padding:6px 12px;font-size:12px;font-weight:500;color:var(--t2);cursor:pointer;white-space:nowrap}
+.tabbar{display:flex;background:var(--card);border-top:0.5px solid var(--br2);padding-bottom:var(--sb);flex-shrink:0}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 0 8px;cursor:pointer;gap:3px;border:none;background:none;color:var(--t3);font-size:10px;font-weight:500;transition:color .15s}
+.tab.active{color:var(--g)}
+.tab svg{width:22px;height:22px}
+.page{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 20px;display:none}
+.page.active{display:block}
+.streak-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.streak-card{background:var(--card);border-radius:var(--rs);padding:10px 6px;text-align:center;border:0.5px solid var(--br2)}
+.streak-card .sn{font-size:22px;font-weight:700;color:var(--t)}
+.streak-card .sl{font-size:10px;color:var(--t2);margin-top:2px}
+.streak-card.lit .sn{color:var(--g)}
+.item-card{background:var(--card);border:0.5px solid var(--br2);border-radius:var(--r);margin-bottom:10px;overflow:hidden;transition:border-color .2s,background .2s}
+.item-card.done{border-color:var(--gm);background:var(--gl)}
+.card-top{display:flex;align-items:center;padding:12px 14px 12px 12px}
+.sefer-img{width:44px;height:56px;object-fit:cover;border-radius:5px;flex-shrink:0;margin-right:12px;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+.card-info{flex:1;min-width:0}
+.card-name{font-size:15px;font-weight:600;color:var(--t)}
+.item-card.done .card-name{color:var(--gd)}
+.card-sub{font-size:12px;color:var(--t2);margin-top:2px}
+.item-card.done .card-sub{color:var(--gp)}
+.check-btn{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--br);background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-size:16px;margin-left:8px}
+.item-card.done .check-btn{background:var(--g);border-color:var(--g);color:#fff}
+.card-body{padding:0 14px 12px}
+.prog-wrap{height:3px;background:var(--br2);border-radius:2px;overflow:hidden;margin-bottom:8px}
+.prog-bar{height:100%;background:var(--g);border-radius:2px;transition:width .4s}
+.notes-toggle{background:none;border:none;font-size:12px;color:var(--t3);cursor:pointer;padding:2px 0;display:flex;align-items:center;gap:5px}
+.item-card.done .notes-toggle{color:var(--gp)}
+textarea.note{width:100%;margin-top:6px;padding:8px 10px;font-size:13px;font-family:inherit;border:0.5px solid var(--br);border-radius:var(--rs);background:var(--card);color:var(--t);resize:none;line-height:1.5}
+.item-card.done textarea.note{border-color:var(--gm)}
+textarea.note:focus{outline:none;border-color:var(--g)}
+.hidden{display:none!important}
+.mussar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.adj-btn{width:30px;height:30px;border-radius:50%;border:0.5px solid var(--br);background:var(--bg);cursor:pointer;font-size:18px;color:var(--t);display:flex;align-items:center;justify-content:center}
+.time-val{font-size:14px;font-weight:600;min-width:50px;text-align:center;color:var(--t)}
+.time-of{font-size:12px;color:var(--t2)}
+.save-btn{width:100%;margin-top:6px;padding:14px;border-radius:var(--rs);border:none;background:var(--g);font-size:16px;font-weight:600;color:#fff;cursor:pointer;transition:opacity .15s}
+.save-btn:active{opacity:.85}
+.save-btn.saved{background:var(--gd)}
+.pg-title{font-size:18px;font-weight:700;margin-bottom:12px}
+.week-day{background:var(--card);border:0.5px solid var(--br2);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
+.wdh{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.wdn{font-size:14px;font-weight:600;color:var(--t)}
+.wdd{font-size:12px;color:var(--t2)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500}
+.chip.done{background:var(--gl);color:var(--gd)}
+.chip.miss{background:var(--bg);color:var(--t3);border:0.5px solid var(--br2)}
+.week-note{font-size:12px;color:var(--t2);margin-top:8px;font-style:italic;border-top:0.5px solid var(--br2);padding-top:8px}
+.hm-section{margin-bottom:20px}
+.hm-label{font-size:11px;font-weight:600;color:var(--t2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em}
+.hm-grid{display:grid;grid-template-columns:repeat(13,1fr);gap:4px}
+.hm-cell{aspect-ratio:1;border-radius:3px}
+.hm-0{background:var(--br2)}
+.hm-1{background:#9FE1CB}
+.hm-2{background:var(--g)}
+.hm-legend{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:11px;color:var(--t2)}
+.hm-legend .hm-cell{width:12px;height:12px;flex-shrink:0}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:flex-end;justify-content:center;z-index:100;padding-bottom:var(--sb)}
+.modal-overlay.hidden{display:none}
+.modal{background:var(--card);border-radius:20px 20px 0 0;padding:20px 20px calc(20px + var(--sb));width:100%;max-width:430px}
+.modal h2{font-size:17px;font-weight:600;margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--t2);margin-bottom:16px}
+.date-row{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto}
+.date-btn{flex-shrink:0;padding:8px 12px;border-radius:var(--rs);border:0.5px solid var(--br);background:var(--bg);font-size:13px;font-weight:500;color:var(--t);cursor:pointer}
+.date-btn.sel{border-color:var(--g);background:var(--gl);color:var(--gd)}
+.modal-items{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.modal-item{display:flex;align-items:center;gap:10px}
+.modal-item label{font-size:14px;color:var(--t);flex:1}
+.mchk{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--br);background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.mchk.on{background:var(--g);border-color:var(--g);color:#fff}
+.modal-btns{display:flex;gap:10px}
+.mbtn-cancel{flex:1;padding:12px;border-radius:var(--rs);border:0.5px solid var(--br);background:var(--bg);font-size:15px;font-weight:500;color:var(--t);cursor:pointer}
+.mbtn-save{flex:2;padding:12px;border-radius:var(--rs);border:none;background:var(--g);font-size:15px;font-weight:600;color:#fff;cursor:pointer}
+.siyum-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:200;padding:24px}
+.siyum-overlay.hidden{display:none}
+.siyum-box{background:var(--card);border-radius:24px;padding:32px 24px;text-align:center;max-width:320px;width:100%}
+.siyum-emoji{font-size:52px;margin-bottom:12px}
+.siyum-title{font-size:22px;font-weight:700;color:var(--t);margin-bottom:6px}
+.siyum-sub{font-size:14px;color:var(--t2);line-height:1.5;margin-bottom:20px}
+.siyum-close{width:100%;padding:14px;border-radius:var(--rs);border:none;background:var(--g);font-size:16px;font-weight:600;color:#fff;cursor:pointer}
+.install-banner{background:#FAEEDA;border:0.5px solid #BA7517;border-radius:var(--rs);padding:10px 14px;margin-bottom:12px;font-size:13px;color:#BA7517;display:flex;align-items:center;gap:8px}
+.install-banner button{background:none;border:none;font-size:16px;cursor:pointer;margin-left:auto;color:#BA7517}
 </style>
 </head>
 <body>
 <div id="app">
   <div class="topbar">
-    <div>
-      <div class="topbar h1" style="font-size:20px;font-weight:600" id="topbar-title">Daily Learning</div>
-      <div class="date-lbl" id="topbar-date"></div>
+    <div class="logo-wrap">
+      <svg class="logo-svg" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="38" height="38" rx="10" fill="#1D9E75"/>
+        <rect x="7" y="10" width="10" height="17" rx="2" fill="white" opacity="0.95"/>
+        <rect x="21" y="10" width="10" height="17" rx="2" fill="white" opacity="0.95"/>
+        <rect x="17" y="8" width="4" height="21" rx="1.5" fill="white"/>
+        <rect x="9" y="14" width="6" height="1.5" rx="0.75" fill="#1D9E75" opacity="0.5"/>
+        <rect x="9" y="17" width="6" height="1.5" rx="0.75" fill="#1D9E75" opacity="0.5"/>
+        <rect x="9" y="20" width="6" height="1.5" rx="0.75" fill="#1D9E75" opacity="0.5"/>
+        <rect x="23" y="14" width="6" height="1.5" rx="0.75" fill="#1D9E75" opacity="0.5"/>
+        <rect x="23" y="17" width="6" height="1.5" rx="0.75" fill="#1D9E75" opacity="0.5"/>
+        <rect x="23" y="20" width="6" height="1.5" rx="0.75" fill="#1D9E75" opacity="0.5"/>
+      </svg>
+      <div>
+        <div class="logo-title">Torah Tracker</div>
+        <div class="logo-sub">יהי רצון שתזכה ללמוד</div>
+      </div>
     </div>
     <button class="catch-up-btn" onclick="openCatchUp()">+ Past day</button>
   </div>
   <div class="page active" id="page-today">
     <div id="install-banner" class="install-banner hidden">
-      📲 Tap Share → "Add to Home Screen" to install
-      <button onclick="document.getElementById('install-banner').classList.add('hidden')">✕</button>
+      📲 Tap Share → "Add to Home Screen"
+      <button onclick="dismissBanner()">✕</button>
     </div>
     <div class="streak-grid" id="streak-grid"></div>
     <div class="item-card" id="card-mishna">
-      <div class="item-top">
+      <div class="card-top">
+        <img class="sefer-img" src="https://images.judaicaplace.com/product_images/large/YDM.jpg" onerror="this.src='https://placehold.co/44x56/1D9E75/white?text=מ'">
+        <div class="card-info"><div class="card-name">Mishna Yomi</div><div class="card-sub" id="sub-mishna"></div></div>
         <button class="check-btn" id="chk-mishna" onclick="toggle('mishna')"></button>
-        <div class="item-info"><div class="item-name">Mishna Yomi</div><div class="item-sub" id="sub-mishna"></div></div>
       </div>
-      <div class="prog-wrap"><div class="prog-bar" id="prog-mishna" style="width:0%"></div></div>
-      <button class="notes-toggle" onclick="toggleNote('mishna')">&#9998; <span id="ntlbl-mishna">Add a note</span></button>
-      <textarea class="note hidden" id="note-mishna" rows="2" placeholder="What stood out today?" oninput="saveNote('mishna')"></textarea>
+      <div class="card-body">
+        <div class="prog-wrap"><div class="prog-bar" id="prog-mishna" style="width:0%"></div></div>
+        <button class="notes-toggle" onclick="toggleNote('mishna')">&#9998; <span id="ntlbl-mishna">Add a note</span></button>
+        <textarea class="note hidden" id="note-mishna" rows="2" placeholder="What stood out today?" oninput="saveNote('mishna')"></textarea>
+      </div>
     </div>
     <div class="item-card" id="card-nach">
-      <div class="item-top">
+      <div class="card-top">
+        <img class="sefer-img" src="https://images.judaicaplace.com/product_images/large/YDN.jpg" onerror="this.src='https://placehold.co/44x56/1D9E75/white?text=נ'">
+        <div class="card-info"><div class="card-name">Nach Yomi</div><div class="card-sub" id="sub-nach"></div></div>
         <button class="check-btn" id="chk-nach" onclick="toggle('nach')"></button>
-        <div class="item-info"><div class="item-name">Nach Yomi</div><div class="item-sub" id="sub-nach"></div></div>
       </div>
-      <div class="prog-wrap"><div class="prog-bar" id="prog-nach" style="width:0%"></div></div>
-      <button class="notes-toggle" onclick="toggleNote('nach')">&#9998; <span id="ntlbl-nach">Add a note</span></button>
-      <textarea class="note hidden" id="note-nach" rows="2" placeholder="A thought from the perek..." oninput="saveNote('nach')"></textarea>
+      <div class="card-body">
+        <div class="prog-wrap"><div class="prog-bar" id="prog-nach" style="width:0%"></div></div>
+        <button class="notes-toggle" onclick="toggleNote('nach')">&#9998; <span id="ntlbl-nach">Add a note</span></button>
+        <textarea class="note hidden" id="note-nach" rows="2" placeholder="A thought from the perek..." oninput="saveNote('nach')"></textarea>
+      </div>
     </div>
     <div class="item-card" id="card-mussar">
-      <div class="item-top">
+      <div class="card-top">
+        <img class="sefer-img" src="https://images.judaicaplace.com/product_images/large/MESI.jpg" onerror="this.src='https://placehold.co/44x56/1D9E75/white?text=מוס'">
+        <div class="card-info"><div class="card-name">Mussar</div><div class="card-sub">10 min goal</div></div>
         <button class="check-btn" id="chk-mussar" onclick="toggleMussar()"></button>
-        <div class="item-info"><div class="item-name">Mussar</div><div class="item-sub">10 min goal</div></div>
       </div>
-      <div class="mussar-row">
-        <button class="adj-btn" onclick="adjMussar(-5)">&#8722;</button>
-        <div class="time-val" id="mussar-val">0 min</div>
-        <button class="adj-btn" onclick="adjMussar(5)">+</button>
-        <div class="time-of">of 10 min</div>
+      <div class="card-body">
+        <div class="mussar-row">
+          <button class="adj-btn" onclick="adjMussar(-5)">&#8722;</button>
+          <div class="time-val" id="mussar-val">0 min</div>
+          <button class="adj-btn" onclick="adjMussar(5)">+</button>
+          <div class="time-of">of 10 min</div>
+        </div>
+        <div class="prog-wrap"><div class="prog-bar" id="prog-mussar" style="width:0%"></div></div>
+        <button class="notes-toggle" onclick="toggleNote('mussar')">&#9998; <span id="ntlbl-mussar">Add a note</span></button>
+        <textarea class="note hidden" id="note-mussar" rows="2" placeholder="A chizuk thought..." oninput="saveNote('mussar')"></textarea>
       </div>
-      <div class="prog-wrap"><div class="prog-bar" id="prog-mussar" style="width:0%"></div></div>
-      <button class="notes-toggle" onclick="toggleNote('mussar')">&#9998; <span id="ntlbl-mussar">Add a note</span></button>
-      <textarea class="note hidden" id="note-mussar" rows="2" placeholder="A chizuk thought..." oninput="saveNote('mussar')"></textarea>
     </div>
     <div class="item-card" id="card-bitachon">
-      <div class="item-top">
+      <div class="card-top">
+        <img class="sefer-img" src="https://images.judaicaplace.com/product_images/large/CHBI.jpg" onerror="this.src='https://placehold.co/44x56/1D9E75/white?text=בט'">
+        <div class="card-info"><div class="card-name">Bitachon</div><div class="card-sub">Daily learning</div></div>
         <button class="check-btn" id="chk-bitachon" onclick="toggle('bitachon')"></button>
-        <div class="item-info"><div class="item-name">Bitachon</div><div class="item-sub">Daily learning</div></div>
       </div>
-      <button class="notes-toggle" onclick="toggleNote('bitachon')">&#9998; <span id="ntlbl-bitachon">Add a note</span></button>
-      <textarea class="note hidden" id="note-bitachon" rows="2" placeholder="A thought on bitachon..." oninput="saveNote('bitachon')"></textarea>
+      <div class="card-body">
+        <button class="notes-toggle" onclick="toggleNote('bitachon')">&#9998; <span id="ntlbl-bitachon">Add a note</span></button>
+        <textarea class="note hidden" id="note-bitachon" rows="2" placeholder="A thought on bitachon..." oninput="saveNote('bitachon')"></textarea>
+      </div>
     </div>
     <div class="item-card" id="card-shabbos">
-      <div class="item-top">
+      <div class="card-top">
+        <img class="sefer-img" src="https://images.judaicaplace.com/product_images/large/MBSM.jpg" onerror="this.src='https://placehold.co/44x56/1D9E75/white?text=ש'">
+        <div class="card-info"><div class="card-name">Shabbos Halacha</div><div class="card-sub">Daily halacha</div></div>
         <button class="check-btn" id="chk-shabbos" onclick="toggle('shabbos')"></button>
-        <div class="item-info"><div class="item-name">Shabbos Halacha</div><div class="item-sub">Daily halacha</div></div>
       </div>
-      <button class="notes-toggle" onclick="toggleNote('shabbos')">&#9998; <span id="ntlbl-shabbos">Add a note</span></button>
-      <textarea class="note hidden" id="note-shabbos" rows="2" placeholder="Which halacha did you learn?" oninput="saveNote('shabbos')"></textarea>
+      <div class="card-body">
+        <button class="notes-toggle" onclick="toggleNote('shabbos')">&#9998; <span id="ntlbl-shabbos">Add a note</span></button>
+        <textarea class="note hidden" id="note-shabbos" rows="2" placeholder="Which halacha did you learn?" oninput="saveNote('shabbos')"></textarea>
+      </div>
     </div>
     <button class="save-btn" id="save-btn" onclick="saveDay()">Save today's learning</button>
-  </div>
-  <div class="page" id="page-week"><div class="week-header">This week</div><div id="week-content"></div></div>
+  </div>  <div class="page" id="page-week"><div class="pg-title">This week</div><div id="week-content"></div></div>
   <div class="page" id="page-heatmap">
-    <div class="heatmap-title">Streak map</div>
-    <div class="heatmap-sub">Last 91 days of learning</div>
+    <div class="pg-title">Streak map</div>
+    <div style="font-size:13px;color:var(--t2);margin-bottom:16px">Last 91 days of learning</div>
     <div id="heatmap-content"></div>
     <div class="hm-legend"><div class="hm-cell hm-0"></div> None <div class="hm-cell hm-1" style="margin-left:8px"></div> Partial <div class="hm-cell hm-2" style="margin-left:8px"></div> Full</div>
   </div>
@@ -226,62 +222,63 @@ textarea.note:focus { outline: none; border-color: var(--green); }
 <div class="modal-overlay hidden" id="catchup-overlay">
   <div class="modal">
     <h2>Log a past day</h2><div class="modal-sub">Which day do you want to update?</div>
-    <div class="date-picker-row" id="date-picker-row"></div>
+    <div class="date-row" id="date-row"></div>
     <div class="modal-items" id="catchup-items"></div>
-    <div class="modal-btns"><button class="modal-cancel" onclick="closeCatchUp()">Cancel</button><button class="modal-save" onclick="saveCatchUp()">Save</button></div>
+    <div class="modal-btns"><button class="mbtn-cancel" onclick="closeCatchUp()">Cancel</button><button class="mbtn-save" onclick="saveCatchUp()">Save</button></div>
   </div>
 </div>
 <div class="siyum-overlay hidden" id="siyum-overlay">
   <div class="siyum-box">
-    <div class="siyum-emoji">🎉</div>
+    <div class="siyum-emoji">&#127881;</div>
     <div class="siyum-title" id="siyum-title">Mazal Tov!</div>
     <div class="siyum-sub" id="siyum-sub"></div>
-    <button class="siyum-close" onclick="closeSiyum()">יישר כח!</button>
+    <button class="siyum-close" onclick="closeSiyum()">&#1497;&#1497;&#1513;&#1512; &#1499;&#1495;!</button>
   </div>
 </div>
 <script>
-const NACH_ORDER=[{book:"Shmuel II",p:24},{book:"Melachim I",p:22},{book:"Melachim II",p:25},{book:"Yeshayah",p:66},{book:"Yirmiyah",p:52},{book:"Yechezkel",p:48},{book:"Hoshea",p:14},{book:"Yoel",p:4},{book:"Amos",p:9},{book:"Ovadiah",p:1},{book:"Yonah",p:4},{book:"Michah",p:7},{book:"Nachum",p:3},{book:"Chavakuk",p:3},{book:"Tzefaniah",p:3},{book:"Chaggai",p:2},{book:"Zechariah",p:14},{book:"Malachi",p:3},{book:"Tehillim",p:150},{book:"Mishlei",p:31},{book:"Iyov",p:42},{book:"Shir Hashirim",p:8},{book:"Rus",p:4},{book:"Eichah",p:5},{book:"Kohelet",p:12},{book:"Esther",p:10},{book:"Daniel",p:12},{book:"Ezra",p:10},{book:"Nechemiah",p:13},{book:"Divrei Hayamim I",p:29},{book:"Divrei Hayamim II",p:36}];
-const MISHNA_PM={"Berachos":9,"Peah":8,"Demai":7,"Kilayim":9,"Sheviis":10,"Terumas":11,"Maasros":5,"Maaser Sheni":5,"Challah":4,"Orlah":3,"Bikurim":4,"Shabbos":24,"Eruvin":10,"Pesachim":10,"Shekalim":8,"Yoma":8,"Sukkah":5,"Beitzah":5,"Rosh Hashana":4,"Taanis":4,"Megillah":4,"Moed Katan":3,"Chagigah":3,"Yevamos":16,"Kesubos":13,"Nedarim":11,"Nazir":9,"Sotah":9,"Gittin":9,"Kiddushin":4,"Bava Kamma":10,"Bava Metziah":10,"Bava Basra":10,"Sanhedrin":11,"Makkos":3,"Shevuos":8,"Eduyos":8,"Avodah Zarah":5,"Avos":6,"Horayos":3,"Zevachim":14,"Menachos":13,"Chulin":12,"Bechoros":9,"Erchin":9,"Temurah":7,"Kerisos":6,"Meilah":6,"Tamid":7,"Middos":5,"Kinnim":3,"Keilim":30,"Ohalos":18,"Negaim":14,"Parah":12,"Taharos":10,"Mikvaos":10,"Niddah":10,"Machshirin":6,"Zavim":5,"Tevul Yom":4,"Yadayim":4,"Uktzin":3};
-const MISHNA_LIST=(()=>{const order=["Berachos","Peah","Demai","Kilayim","Sheviis","Terumas","Maasros","Maaser Sheni","Challah","Orlah","Bikurim","Shabbos","Eruvin","Pesachim","Shekalim","Yoma","Sukkah","Beitzah","Rosh Hashana","Taanis","Megillah","Moed Katan","Chagigah","Yevamos","Kesubos","Nedarim","Nazir","Sotah","Gittin","Kiddushin","Bava Kamma","Bava Metziah","Bava Basra","Sanhedrin","Makkos","Shevuos","Eduyos","Avodah Zarah","Avos","Horayos","Zevachim","Menachos","Chulin","Bechoros","Erchin","Temurah","Kerisos","Meilah","Tamid","Middos","Kinnim","Keilim","Ohalos","Negaim","Parah","Taharos","Mikvaos","Niddah","Machshirin","Zavim","Tevul Yom","Yadayim","Uktzin"];const list=[];for(const m of order)for(let i=1;i<=(MISHNA_PM[m]||5);i++)list.push({masechta:m,perek:i});return list;})();
-const NACH_TOTAL=NACH_ORDER.reduce((s,b)=>s+b.p,0);
-const MISHNA_TOTAL=MISHNA_LIST.length;
-function getNach(offset){let pos=(offset*2)%NACH_TOTAL;let running=0;for(let i=0;i<NACH_ORDER.length;i++){const b=NACH_ORDER[i];if(pos<running+b.p){const p1=pos-running+1;let p2=p1+1,book2=b.book,nextBook=false;if(p2>b.p){const nb=NACH_ORDER[i+1];if(nb){book2=nb.book;p2=1;nextBook=true;}else p2=b.p;}const label=nextBook?`${b.book} ${p1}, ${book2} 1`:`${b.book} ${p1}–${p2}`;return{label,progress:Math.round((running+p1-1)/NACH_TOTAL*100),book:b.book,perek:p1};}running+=b.p;}}
-function getMishna(offset){const pos=(offset*2)%MISHNA_TOTAL;const a=MISHNA_LIST[pos],b=MISHNA_LIST[(pos+1)%MISHNA_TOTAL];const label=a.masechta===b.masechta?`${a.masechta} ${a.perek}:1–${b.perek}:1`:`${a.masechta} ${a.perek}:1, ${b.masechta} ${b.perek}:1`;return{label,progress:Math.round(pos/MISHNA_TOTAL*100),masechta:a.masechta,perek:a.perek};}
-const KEY='torah_pwa_v1';
-function todayKey(){const d=new Date();d.setHours(0,0,0,0);return d.toISOString().slice(0,10);}
-function dayOffset(dateStr){const d=new Date(dateStr+'T00:00:00');return Math.floor((d-new Date('2025-01-01T00:00:00'))/86400000);}
-let DB=JSON.parse(localStorage.getItem(KEY)||'{}');
+var NACH=[{b:"Shmuel II",p:24},{b:"Melachim I",p:22},{b:"Melachim II",p:25},{b:"Yeshayah",p:66},{b:"Yirmiyah",p:52},{b:"Yechezkel",p:48},{b:"Hoshea",p:14},{b:"Yoel",p:4},{b:"Amos",p:9},{b:"Ovadiah",p:1},{b:"Yonah",p:4},{b:"Michah",p:7},{b:"Nachum",p:3},{b:"Chavakuk",p:3},{b:"Tzefaniah",p:3},{b:"Chaggai",p:2},{b:"Zechariah",p:14},{b:"Malachi",p:3},{b:"Tehillim",p:150},{b:"Mishlei",p:31},{b:"Iyov",p:42},{b:"Shir Hashirim",p:8},{b:"Rus",p:4},{b:"Eichah",p:5},{b:"Kohelet",p:12},{b:"Esther",p:10},{b:"Daniel",p:12},{b:"Ezra",p:10},{b:"Nechemiah",p:13},{b:"Divrei Hayamim I",p:29},{b:"Divrei Hayamim II",p:36}];
+var MPM={"Berachos":9,"Peah":8,"Demai":7,"Kilayim":9,"Sheviis":10,"Terumas":11,"Maasros":5,"Maaser Sheni":5,"Challah":4,"Orlah":3,"Bikurim":4,"Shabbos":24,"Eruvin":10,"Pesachim":10,"Shekalim":8,"Yoma":8,"Sukkah":5,"Beitzah":5,"Rosh Hashana":4,"Taanis":4,"Megillah":4,"Moed Katan":3,"Chagigah":3,"Yevamos":16,"Kesubos":13,"Nedarim":11,"Nazir":9,"Sotah":9,"Gittin":9,"Kiddushin":4,"Bava Kamma":10,"Bava Metziah":10,"Bava Basra":10,"Sanhedrin":11,"Makkos":3,"Shevuos":8,"Eduyos":8,"Avodah Zarah":5,"Avos":6,"Horayos":3,"Zevachim":14,"Menachos":13,"Chulin":12,"Bechoros":9,"Erchin":9,"Temurah":7,"Kerisos":6,"Meilah":6,"Tamid":7,"Middos":5,"Kinnim":3,"Keilim":30,"Ohalos":18,"Negaim":14,"Parah":12,"Taharos":10,"Mikvaos":10,"Niddah":10,"Machshirin":6,"Zavim":5,"Tevul Yom":4,"Yadayim":4,"Uktzin":3};
+var MLIST=(function(){var o=["Berachos","Peah","Demai","Kilayim","Sheviis","Terumas","Maasros","Maaser Sheni","Challah","Orlah","Bikurim","Shabbos","Eruvin","Pesachim","Shekalim","Yoma","Sukkah","Beitzah","Rosh Hashana","Taanis","Megillah","Moed Katan","Chagigah","Yevamos","Kesubos","Nedarim","Nazir","Sotah","Gittin","Kiddushin","Bava Kamma","Bava Metziah","Bava Basra","Sanhedrin","Makkos","Shevuos","Eduyos","Avodah Zarah","Avos","Horayos","Zevachim","Menachos","Chulin","Bechoros","Erchin","Temurah","Kerisos","Meilah","Tamid","Middos","Kinnim","Keilim","Ohalos","Negaim","Parah","Taharos","Mikvaos","Niddah","Machshirin","Zavim","Tevul Yom","Yadayim","Uktzin"];var l=[];for(var i=0;i<o.length;i++)for(var j=1;j<=(MPM[o[i]]||5);j++)l.push({m:o[i],p:j});return l;})();
+var NT=NACH.reduce(function(s,b){return s+b.p;},0);
+var MT=MLIST.length;
+function getNach(off){var pos=(off*2)%NT,run=0;for(var i=0;i<NACH.length;i++){var bk=NACH[i];if(pos<run+bk.p){var p1=pos-run+1,p2=p1+1,b2=bk.b,nb=false;if(p2>bk.p&&NACH[i+1]){b2=NACH[i+1].b;p2=1;nb=true;}else if(p2>bk.p)p2=bk.p;return{label:nb?bk.b+" "+p1+", "+b2+" 1":bk.b+" "+p1+"\u2013"+p2,pct:Math.round((run+p1-1)/NT*100),book:bk.b,perek:p1};}run+=bk.p;}}
+function getMishna(off){var pos=(off*2)%MT,a=MLIST[pos],b=MLIST[(pos+1)%MT];return{label:a.m===b.m?a.m+" "+a.p+":1\u2013"+b.p+":1":a.m+" "+a.p+":1, "+b.m+" "+b.p+":1",pct:Math.round(pos/MT*100),masechta:a.m,perek:a.p};}
+var KEY="torah_pwa_v2";
+function todayKey(){var d=new Date();d.setHours(0,0,0,0);return d.toISOString().slice(0,10);}
+function dayOff(ds){return Math.floor((new Date(ds+"T00:00:00")-new Date("2025-01-01T00:00:00"))/86400000);}
+var DB=JSON.parse(localStorage.getItem(KEY)||"{}")
 function persist(){localStorage.setItem(KEY,JSON.stringify(DB));}
-function getDay(key){if(!DB[key])DB[key]={mishna:false,nach:false,mussar:0,bitachon:false,shabbos:false,notes:{}};if(!DB[key].notes)DB[key].notes={};return DB[key];}
-const ITEMS=['mishna','nach','mussar','bitachon','shabbos'];
-let lastSiyumShown=JSON.parse(localStorage.getItem('siyum_shown')||'{}');
-function checkSiyum(key){const tk=todayKey();const off=dayOffset(tk);const nach=getNach(off);const mishna=getMishna(off);if(key==='nach'&&nach.perek===nach_book_total(nach.book)){const sk='nach_'+nach.book+'_'+tk;if(!lastSiyumShown[sk]){lastSiyumShown[sk]=true;localStorage.setItem('siyum_shown',JSON.stringify(lastSiyumShown));showSiyum('Siyum on '+nach.book+'!','You completed Sefer '+nach.book+'. What an incredible achievement — may you go from strength to strength!');}}if(key==='mishna'){const pm=MISHNA_PM[mishna.masechta]||5;if(mishna.perek===pm){const sk='mishna_'+mishna.masechta+'_'+tk;if(!lastSiyumShown[sk]){lastSiyumShown[sk]=true;localStorage.setItem('siyum_shown',JSON.stringify(lastSiyumShown));showSiyum('Siyum on Maseches '+mishna.masechta+'!','You completed Maseches '+mishna.masechta+'. Mazal tov — may you continue learning l'ilui neshamah and in good health!');}}}}
-function nach_book_total(book){const b=NACH_ORDER.find(x=>x.book===book);return b?b.p:0;}
-function showSiyum(title,sub){document.getElementById('siyum-title').textContent=title;document.getElementById('siyum-sub').textContent=sub;document.getElementById('siyum-overlay').classList.remove('hidden');}
-function closeSiyum(){document.getElementById('siyum-overlay').classList.add('hidden');}
-function renderToday(){const tk=todayKey();const off=dayOffset(tk);const d=getDay(tk);const nach=getNach(off);const mishna=getMishna(off);document.getElementById('topbar-date').textContent=new Date(tk+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});document.getElementById('sub-nach').textContent=nach.label;document.getElementById('sub-mishna').textContent=mishna.label;document.getElementById('prog-nach').style.width=nach.progress+'%';document.getElementById('prog-mishna').style.width=mishna.progress+'%';['mishna','nach','bitachon','shabbos'].forEach(key=>{const card=document.getElementById('card-'+key);const chk=document.getElementById('chk-'+key);if(d[key]){card.classList.add('done');chk.textContent='✓';}else{card.classList.remove('done');chk.textContent='';}updateNtLbl(key,d.notes[key]);});const mins=d.mussar;const mc=document.getElementById('card-mussar');const mchk=document.getElementById('chk-mussar');document.getElementById('mussar-val').textContent=mins+' min';document.getElementById('prog-mussar').style.width=Math.min(100,mins*10)+'%';if(mins>=10){mc.classList.add('done');mchk.textContent='✓';}else{mc.classList.remove('done');mchk.textContent='';}updateNtLbl('mussar',d.notes['mussar']);renderStreaks();}
-function updateNtLbl(key,note){const el=document.getElementById('ntlbl-'+key);if(el)el.textContent=(note&&note.trim())?'Edit note':'Add a note';}
-function renderStreaks(){const tk=todayKey();const keys=['mishna','nach','mussar','bitachon'];const labels=['Mishna','Nach','Mussar','Bitachon'];document.getElementById('streak-grid').innerHTML=keys.map((k,i)=>{const s=getStreak(k,tk);return '<div class="streak-card '+(s>0?'on-fire':'')+'"><div style="font-size:16px">'+(s>0?'🔥':'○')+'</div><div class="s-num">'+s+'</div><div class="s-lbl">'+labels[i]+'</div></div>';}).join('');}
-function getStreak(key,fromKey){let streak=0;const d=new Date(fromKey+'T12:00:00');while(true){const k=d.toISOString().slice(0,10);const val=DB[k];if(!val)break;const done=key==='mussar'?val.mussar>=10:val[key];if(!done)break;streak++;d.setDate(d.getDate()-1);}return streak;}
-function toggle(key){const tk=todayKey();const d=getDay(tk);d[key]=!d[key];persist();renderToday();if(d[key])checkSiyum(key);}
-function toggleMussar(){const tk=todayKey();const d=getDay(tk);d.mussar=d.mussar>=10?0:10;persist();renderToday();}
-function adjMussar(delta){const tk=todayKey();const d=getDay(tk);d.mussar=Math.max(0,Math.min(60,d.mussar+delta));persist();renderToday();}
-function toggleNote(key){const ta=document.getElementById('note-'+key);const tk=todayKey();const d=getDay(tk);ta.classList.toggle('hidden');if(!ta.classList.contains('hidden')){ta.value=d.notes[key]||'';ta.focus();}}
-function saveNote(key){const ta=document.getElementById('note-'+key);const tk=todayKey();const d=getDay(tk);d.notes[key]=ta.value;persist();updateNtLbl(key,ta.value);}
-function saveDay(){persist();const btn=document.getElementById('save-btn');btn.textContent='✓ Saved';btn.classList.add('saved');setTimeout(()=>{btn.textContent="Save today's learning";btn.classList.remove('saved');},2000);}
-function renderWeek(){const days=[];const today=new Date();today.setHours(0,0,0,0);for(let i=6;i>=0;i--){const d=new Date(today);d.setDate(d.getDate()-i);days.push(d.toISOString().slice(0,10));}const labels={mishna:'Mishna',nach:'Nach',mussar:'Mussar',bitachon:'Bitachon',shabbos:'Shabbos'};document.getElementById('week-content').innerHTML=days.map(dk=>{const d=DB[dk];const dn=new Date(dk+'T12:00:00').toLocaleDateString('en-US',{weekday:'short'});const dt=new Date(dk+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});const isToday=dk===todayKey();const chips=ITEMS.map(k=>{const done=d?(k==='mussar'?d.mussar>=10:d[k]):false;return '<span class="chip '+(done?'done':'miss')+'">'+labels[k]+'</span>';}).join('');const noteTexts=d?ITEMS.map(k=>(d.notes||{})[k]).filter(Boolean):[];const noteHtml=noteTexts.length?'<div class="week-note">"'+noteTexts[0].slice(0,120)+(noteTexts[0].length>120?'…':'`")+'</div>':'';return '<div class="week-day"><div class="week-day-header"><div class="week-day-name">'+dn+(isToday?' · Today':'')+'</div><div class="week-day-date">'+dt+'</div></div><div class="week-chips">'+chips+'</div>'+noteHtml+'</div>';}).join('');}
-function renderHeatmap(){const today=new Date();today.setHours(0,0,0,0);const sections=[{label:'Mishna Yomi',key:'mishna'},{label:'Nach Yomi',key:'nach'},{label:'Mussar',key:'mussar'},{label:'Bitachon',key:'bitachon'}];document.getElementById('heatmap-content').innerHTML=sections.map(sec=>{const cells=[];for(let i=90;i>=0;i--){const d=new Date(today);d.setDate(d.getDate()-i);const dk=d.toISOString().slice(0,10);const val=DB[dk];let level=0;if(val){const done=sec.key==='mussar'?val.mussar>=10:val[sec.key];const partial=sec.key==='mussar'?val.mussar>0:false;if(done)level=2;else if(partial)level=1;}cells.push('<div class="hm-cell hm-'+level+'" title="'+dk+'"></div>');}return '<div class="heatmap-section"><div class="heatmap-label">'+sec.label+'</div><div class="heatmap-grid">'+cells.join('')+'</div></div>';}).join('');}
-let catchupState={},catchupSelectedDate='';
-function openCatchUp(){const today=new Date();today.setHours(0,0,0,0);const dates=[];for(let i=1;i<=7;i++){const d=new Date(today);d.setDate(d.getDate()-i);dates.push(d.toISOString().slice(0,10));}catchupSelectedDate=dates[0];catchupState={};document.getElementById('date-picker-row').innerHTML=dates.slice(0,5).map(dk=>'<button class="date-btn '+(dk===catchupSelectedDate?'selected':'')+'" onclick="selectCatchupDate(''+dk+'')">'+new Date(dk+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'numeric',day:'numeric'})+'</button>').join('');renderCatchupItems();document.getElementById('catchup-overlay').classList.remove('hidden');}
-function selectCatchupDate(dk){catchupSelectedDate=dk;catchupState={};document.querySelectorAll('.date-btn').forEach(b=>{b.classList.toggle('selected',b.textContent===new Date(dk+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'numeric',day:'numeric'}));});renderCatchupItems();}
-function renderCatchupItems(){const d=DB[catchupSelectedDate];const labels={mishna:'Mishna Yomi',nach:'Nach Yomi',mussar:'Mussar (10 min)',bitachon:'Bitachon',shabbos:'Shabbos Halacha'};document.getElementById('catchup-items').innerHTML=ITEMS.map(k=>{const cur=catchupState[k]!==undefined?catchupState[k]:(d?(k==='mussar'?d.mussar>=10:d[k]):false);return '<div class="modal-item"><label>'+labels[k]+'</label><div class="modal-check '+(cur?'on':'')+'" id="cu-'+k+'" onclick="toggleCatchup(''+k+'')">'+( cur?'✓':'')+'</div></div>';}).join('');}
-function toggleCatchup(key){const d=DB[catchupSelectedDate];const cur=catchupState[key]!==undefined?catchupState[key]:(d?(key==='mussar'?d.mussar>=10:d[key]):false);catchupState[key]=!cur;const el=document.getElementById('cu-'+key);el.classList.toggle('on',catchupState[key]);el.textContent=catchupState[key]?'✓':'';}
-function saveCatchUp(){const d=getDay(catchupSelectedDate);ITEMS.forEach(k=>{if(catchupState[k]!==undefined){if(k==='mussar')d.mussar=catchupState[k]?10:0;else d[k]=catchupState[k];}});DB[catchupSelectedDate]=d;persist();closeCatchUp();renderToday();}
-function closeCatchUp(){document.getElementById('catchup-overlay').classList.add('hidden');}
-function showPage(name){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('page-'+name).classList.add('active');document.getElementById('tab-'+name).classList.add('active');if(name==='week')renderWeek();if(name==='heatmap')renderHeatmap();document.getElementById('topbar-title').textContent=name==='today'?'Daily Learning':name==='week'?'This Week':'Learning History';}
-function checkInstall(){const isStandalone=window.navigator.standalone||window.matchMedia('(display-mode: standalone)').matches;const dismissed=localStorage.getItem('install_dismissed');if(!isStandalone&&!dismissed)document.getElementById('install-banner').classList.remove('hidden');}
-document.querySelector('#install-banner button').addEventListener('click',()=>{localStorage.setItem('install_dismissed','1');});
-if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+function getDay(k){if(!DB[k])DB[k]={mishna:false,nach:false,mussar:0,bitachon:false,shabbos:false,notes:{}};if(!DB[k].notes)DB[k].notes={};return DB[k];}
+var ITEMS=["mishna","nach","mussar","bitachon","shabbos"];
+var SY=JSON.parse(localStorage.getItem("sy2")||"{}");
+function checkSiyum(key){var tk=todayKey(),off=dayOff(tk),na=getNach(off),mi=getMishna(off);if(key==="nach"){var tot=0;for(var i=0;i<NACH.length;i++)if(NACH[i].b===na.book)tot=NACH[i].p;if(na.perek===tot){var sk="n_"+na.book+"_"+tk;if(!SY[sk]){SY[sk]=1;localStorage.setItem("sy2",JSON.stringify(SY));showSiyum("Siyum on "+na.book+"!","You completed Sefer "+na.book+". May you go from strength to strength!");}}}if(key==="mishna"){var pm=MPM[mi.masechta]||5;if(mi.perek===pm){var sk2="m_"+mi.masechta+"_"+tk;if(!SY[sk2]){SY[sk2]=1;localStorage.setItem("sy2",JSON.stringify(SY));showSiyum("Siyum on Maseches "+mi.masechta+"!","You completed Maseches "+mi.masechta+". Mazal tov!");}}}}
+function showSiyum(t,s){document.getElementById("siyum-title").textContent=t;document.getElementById("siyum-sub").textContent=s;document.getElementById("siyum-overlay").classList.remove("hidden");}
+function closeSiyum(){document.getElementById("siyum-overlay").classList.add("hidden");}
+function renderToday(){var tk=todayKey(),off=dayOff(tk),d=getDay(tk),na=getNach(off),mi=getMishna(off);document.getElementById("sub-nach").textContent=na.label;document.getElementById("sub-mishna").textContent=mi.label;document.getElementById("prog-nach").style.width=na.pct+"%";document.getElementById("prog-mishna").style.width=mi.pct+"%";["mishna","nach","bitachon","shabbos"].forEach(function(key){var card=document.getElementById("card-"+key),chk=document.getElementById("chk-"+key);if(d[key]){card.classList.add("done");chk.textContent="\u2713";}else{card.classList.remove("done");chk.textContent="";}updNt(key,d.notes[key]);});var mins=d.mussar,mc=document.getElementById("card-mussar"),mchk=document.getElementById("chk-mussar");document.getElementById("mussar-val").textContent=mins+" min";document.getElementById("prog-mussar").style.width=Math.min(100,mins*10)+"%";if(mins>=10){mc.classList.add("done");mchk.textContent="\u2713";}else{mc.classList.remove("done");mchk.textContent="";}updNt("mussar",d.notes["mussar"]);renderStreaks();}
+function updNt(k,n){var el=document.getElementById("ntlbl-"+k);if(el)el.textContent=(n&&n.trim())?"Edit note":"Add a note";}
+function renderStreaks(){var tk=todayKey(),keys=["mishna","nach","mussar","bitachon"],lbls=["Mishna","Nach","Mussar","Bitachon"];document.getElementById("streak-grid").innerHTML=keys.map(function(k,i){var s=getStreak(k,tk);return"<div class=\"streak-card "+(s>0?"lit":"")+"\"><div style=\"font-size:16px\">"+(s>0?"&#128293;":"&#9675;")+"</div><div class=\"sn\">"+s+"</div><div class=\"sl\">"+lbls[i]+"</div></div>";}).join("");}
+function getStreak(key,fromKey){var s=0,d=new Date(fromKey+"T12:00:00");while(true){var k=d.toISOString().slice(0,10),v=DB[k];if(!v)break;var done=key==="mussar"?v.mussar>=10:v[key];if(!done)break;s++;d.setDate(d.getDate()-1);}return s;}
+function toggle(key){var tk=todayKey(),d=getDay(tk);d[key]=!d[key];persist();renderToday();if(d[key])checkSiyum(key);}
+function toggleMussar(){var tk=todayKey(),d=getDay(tk);d.mussar=d.mussar>=10?0:10;persist();renderToday();}
+function adjMussar(delta){var tk=todayKey(),d=getDay(tk);d.mussar=Math.max(0,Math.min(60,d.mussar+delta));persist();renderToday();}
+function toggleNote(key){var ta=document.getElementById("note-"+key),tk=todayKey(),d=getDay(tk);ta.classList.toggle("hidden");if(!ta.classList.contains("hidden")){ta.value=d.notes[key]||"";ta.focus();}}
+function saveNote(key){var ta=document.getElementById("note-"+key),tk=todayKey(),d=getDay(tk);d.notes[key]=ta.value;persist();updNt(key,ta.value);}
+function saveDay(){persist();var btn=document.getElementById("save-btn");btn.textContent="\u2713 Saved";btn.classList.add("saved");setTimeout(function(){btn.textContent="Save today's learning";btn.classList.remove("saved");},2000);}
+function renderWeek(){var days=[],today=new Date();today.setHours(0,0,0,0);for(var i=6;i>=0;i--){var d=new Date(today);d.setDate(d.getDate()-i);days.push(d.toISOString().slice(0,10));}var lbls={mishna:"Mishna",nach:"Nach",mussar:"Mussar",bitachon:"Bitachon",shabbos:"Shabbos"};document.getElementById("week-content").innerHTML=days.map(function(dk){var d=DB[dk],dn=new Date(dk+"T12:00:00").toLocaleDateString("en-US",{weekday:"short"}),dt=new Date(dk+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"});var chips=ITEMS.map(function(k){var done=d?(k==="mussar"?d.mussar>=10:d[k]):false;return"<span class=\"chip "+(done?"done":"miss")+"\">"+lbls[k]+"</span>";}).join("");var nts=d?ITEMS.map(function(k){return(d.notes||{})[k];}).filter(Boolean):[];var nh=nts.length?"<div class=\"week-note\">"+nts[0].slice(0,120)+(nts[0].length>120?"\u2026":"")+"</div>":"";return"<div class=\"week-day\"><div class=\"wdh\"><div class=\"wdn\">"+dn+(dk===todayKey()?" \u00b7 Today":"")+"</div><div class=\"wdd\">"+dt+"</div></div><div class=\"chips\">"+chips+"</div>"+nh+"</div>";}).join("");}
+function renderHeatmap(){var today=new Date();today.setHours(0,0,0,0);var secs=[{l:"Mishna Yomi",k:"mishna"},{l:"Nach Yomi",k:"nach"},{l:"Mussar",k:"mussar"},{l:"Bitachon",k:"bitachon"}];document.getElementById("heatmap-content").innerHTML=secs.map(function(sec){var cells=[];for(var i=90;i>=0;i--){var d=new Date(today);d.setDate(d.getDate()-i);var dk=d.toISOString().slice(0,10),v=DB[dk],lv=0;if(v){if(sec.k==="mussar"){if(v.mussar>=10)lv=2;else if(v.mussar>0)lv=1;}else if(v[sec.k])lv=2;}cells.push("<div class=\"hm-cell hm-"+lv+"\"></div>");}return"<div class=\"hm-section\"><div class=\"hm-label\">"+sec.l+"</div><div class=\"hm-grid\">"+cells.join("")+"</div></div>";}).join("");}
+var cuState={},cuDate="";
+function openCatchUp(){var today=new Date();today.setHours(0,0,0,0);var dates=[];for(var i=1;i<=7;i++){var d=new Date(today);d.setDate(d.getDate()-i);dates.push(d.toISOString().slice(0,10));}cuDate=dates[0];cuState={};document.getElementById("date-row").innerHTML=dates.slice(0,5).map(function(dk){var lbl=new Date(dk+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",month:"numeric",day:"numeric"});return"<button class=\"date-btn"+(dk===cuDate?" sel":"")+"\" onclick=\"selCuDate('"+dk+"')\">" +lbl+"</button>";}).join("");renderCuItems();document.getElementById("catchup-overlay").classList.remove("hidden");}
+function selCuDate(dk){cuDate=dk;cuState={};document.querySelectorAll(".date-btn").forEach(function(b){b.classList.toggle("sel",b.textContent===new Date(dk+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",month:"numeric",day:"numeric"}));});renderCuItems();}
+function renderCuItems(){var d=DB[cuDate],lbls={mishna:"Mishna Yomi",nach:"Nach Yomi",mussar:"Mussar (10 min)",bitachon:"Bitachon",shabbos:"Shabbos Halacha"};document.getElementById("catchup-items").innerHTML=ITEMS.map(function(k){var cur=cuState[k]!==undefined?cuState[k]:(d?(k==="mussar"?d.mussar>=10:d[k]):false);return"<div class=\"modal-item\"><label>"+lbls[k]+"</label><div class=\"mchk"+(cur?" on":"")+"\" id=\"cu-"+k+"\" onclick=\"togCu('"+k+"')\">"+( cur?"\u2713":"")+"</div></div>";}).join("");}
+function togCu(key){var d=DB[cuDate],cur=cuState[key]!==undefined?cuState[key]:(d?(key==="mussar"?d.mussar>=10:d[key]):false);cuState[key]=!cur;var el=document.getElementById("cu-"+key);el.classList.toggle("on",cuState[key]);el.textContent=cuState[key]?"\u2713":"";}
+function saveCatchUp(){var d=getDay(cuDate);ITEMS.forEach(function(k){if(cuState[k]!==undefined){if(k==="mussar")d.mussar=cuState[k]?10:0;else d[k]=cuState[k];}});DB[cuDate]=d;persist();closeCatchUp();renderToday();}
+function closeCatchUp(){document.getElementById("catchup-overlay").classList.add("hidden");}
+function showPage(name){document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("active");});document.getElementById("page-"+name).classList.add("active");document.getElementById("tab-"+name).classList.add("active");if(name==="week")renderWeek();if(name==="heatmap")renderHeatmap();}
+function dismissBanner(){localStorage.setItem("inst_d","1");document.getElementById("install-banner").classList.add("hidden");}
+function checkInstall(){var sa=window.navigator.standalone||window.matchMedia("(display-mode: standalone)").matches;if(!sa&&!localStorage.getItem("inst_d"))document.getElementById("install-banner").classList.remove("hidden");}
+if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(function(){});
 renderToday();
 checkInstall();
-</script></body></html>
+</script>
+</body>
+</html>
